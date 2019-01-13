@@ -14,6 +14,7 @@
 		F88F665A21EAF1D300CA29D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F88F665821EAF1D300CA29D8 /* LaunchScreen.storyboard */; };
 		F88F666521EAF1D300CA29D8 /* Dat_WayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88F666421EAF1D300CA29D8 /* Dat_WayTests.swift */; };
 		F88F667021EAF1D300CA29D8 /* Dat_WayUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F88F666F21EAF1D300CA29D8 /* Dat_WayUITests.swift */; };
+		F88F667F21EAF1FE00CA29D8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F88F667E21EAF1FE00CA29D8 /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		F88F666B21EAF1D300CA29D8 /* Dat WayUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Dat WayUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F88F666F21EAF1D300CA29D8 /* Dat_WayUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dat_WayUITests.swift; sourceTree = "<group>"; };
 		F88F667121EAF1D300CA29D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F88F667E21EAF1FE00CA29D8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F88F667F21EAF1FE00CA29D8 /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +84,7 @@
 				F88F666321EAF1D300CA29D8 /* Dat WayTests */,
 				F88F666E21EAF1D300CA29D8 /* Dat WayUITests */,
 				F88F664D21EAF1D200CA29D8 /* Products */,
+				F88F667D21EAF1FE00CA29D8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -123,6 +127,14 @@
 				F88F667121EAF1D300CA29D8 /* Info.plist */,
 			);
 			path = "Dat WayUITests";
+			sourceTree = "<group>";
+		};
+		F88F667D21EAF1FE00CA29D8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F88F667E21EAF1FE00CA29D8 /* MapKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -433,12 +445,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L4W9K8N864;
 				INFOPLIST_FILE = "Dat Way/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "starterhacks.Dat-Way";
+				PRODUCT_BUNDLE_IDENTIFIER = "datway.Dat-Way";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -450,12 +463,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L4W9K8N864;
 				INFOPLIST_FILE = "Dat Way/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "starterhacks.Dat-Way";
+				PRODUCT_BUNDLE_IDENTIFIER = "datway.Dat-Way";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
