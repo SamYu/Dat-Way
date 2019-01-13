@@ -150,7 +150,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        let currentHeading = newHeading.magneticHeading
+        currentHeading = newHeading.magneticHeading
         headingLabel.text = "Magnetic heading is: \(currentHeading)"
     }
     
@@ -171,17 +171,36 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     @IBAction func updateDistance(_ sender: Any) {
         distance = Double(distanceField.text!)!
             distanceLabel.text = "Your distance is \(distance!)"
-        print(resultsArDistanceBearing(ar: matchedItems))
+        let matchedStats = resultsArDistanceBearing(ar: matchedItems)
+        //print(matchedItems)
+        //print(matchedStats)
+        //print(currentHeading)
+        //print(isValidPOIAr(ar: matchedStats))
+        latLong(location: matchedStats[0]["location"] as! CLLocation, name: matchedStats[0]["name"] as! String)
     }
     
     // math functions -----
     
     func someQuadrant(bearing: Double) -> String {
-        let quadrant = bearing / 45
-        let  which_quadrant = quadrant.rounded(.up)
-        let  string_quadrant = String(which_quadrant)
-        let  message = "Quadrant " + string_quadrant
-        return message
+        
+        var quadrant = bearing / 45
+        
+        if bearing < 0 {
+            quadrant = (bearing + 360) / 45
+        } else {
+            quadrant = bearing / 45
+        }
+        
+        let which_quadrant = quadrant.rounded(.up)
+        
+        if which_quadrant == 0 {
+            return "Quadrant 1"
+            
+        } else {
+            let string_quadrant = String(which_quadrant)
+            let message = "Quadrant " + string_quadrant
+            return message
+        }
     }
     
     // returns the bearing of a POI relative to the user
@@ -216,8 +235,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         dist = radiansToDegrees(radians: dist)
         dist = dist * 60 * 1.1515
         dist = dist * 1.609344
-        print(currentLatitude, currentLongitude, dist)
-        print(dist)
         return dist
     }
 
@@ -229,16 +246,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             let POIBearing = getBearingBetweenTwoPoints(point1: currentLocation, point2: POI["location"] as! CLLocation)
             let POIQuadrant = someQuadrant(bearing: POIBearing)
             
-            let POIStats = ["name": POI["name"],
-                               "latitude": POI["latitude"],
-                               "longitude": POI["longitude"],
-                               "location": POI["location"],
+            let POIStats = ["name": POI["name"]!,
+                               "latitude": POI["latitude"]!,
+                               "longitude": POI["longitude"]!,
+                               "location": POI["location"]!,
                                "distance": haversineDistance(lat2: POI["latitude"] as! Double, lon2: POI["longitude"] as! Double),
                                "quadrant": POIQuadrant]
             
-            matchedStats.append(POIStats)
+            matchedStats.append(POIStats as [String : Any])
         }
-        print(matchedStats)
         return matchedStats
         
     }
@@ -251,7 +267,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     // quadrant_of_poi is found by founding the angle between the two points and classifying what quadrant it's in
     
     func isValidPOI(POIQuadrant: String, distance_of_poi: Double) -> Bool {
-        let userQuadrant = someQuadrant(bearing: currentHeading)
+        let userQuadrant = someQuadrant(bearing: currentHeading!)
         if distance_of_poi <= distance && userQuadrant == POIQuadrant {
             return true
         } else {
@@ -259,6 +275,65 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
 
     }
+    
+    func isValidPOIAr(ar: [[String:Any]]) -> [[String:Any]] {
+        var validPOIs: [[String:Any]] = []
+        for POI in ar {
+            if isValidPOI(POIQuadrant: POI["quadrant"] as! String, distance_of_poi: POI["distance"] as! Double) == true {
+                validPOIs.append(POI)
+            } else {
+                continue
+            }
+        }
+        return validPOIs
+    }
+    
+    func latLong(location: CLLocation, name: String!)  {
+        
+        let geoCoder = CLGeocoder()
+        geoCoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
+            
+            print("Response GeoLocation : \(placemarks)")
+            var placeMark: CLPlacemark!
+            placeMark = placemarks?[0]
+            
+            // Country
+            if let country = placeMark.addressDictionary!["Country"] as? String {
+                print("Country :- \(country)")
+                // City
+                if let city = placeMark.addressDictionary!["City"] as? String {
+                    print("City :- \(city)")
+                    // State
+                    if let state = placeMark.addressDictionary!["State"] as? String{
+                        print("State :- \(state)")
+                        // Street
+                        if let street = placeMark.addressDictionary!["Street"] as? String{
+                            print("Street :- \(street)")
+                            let str = street
+                            let streetNumber = str.components(
+                                separatedBy: NSCharacterSet.decimalDigits.inverted).joined(separator: "")
+                            print("streetNumber :- \(streetNumber)" as Any)
+                            
+                            // ZIP
+                            if let zip = placeMark.addressDictionary!["ZIP"] as? String{
+                                print("ZIP :- \(zip)")
+                                // Location name
+                                if let locationName = name {
+                                    print("Location Name :- \(locationName)")
+                                    // Street address
+                                    if let thoroughfare = placeMark?.addressDictionary!["Thoroughfare"] as? NSString {
+                                        print("Thoroughfare :- \(thoroughfare)")
+                                        
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    }
+    
     
 }
 
