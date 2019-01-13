@@ -134,7 +134,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                         
                         self.matchedItems.append(resultsAr)
                     }
-                    print(self.matchedItems)
                 }
             }
             
@@ -158,7 +157,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let lastLocation: CLLocation = locations[locations.count - 1]
-        
+    
+        currentLocation = lastLocation
         currentLatitude = lastLocation.coordinate.latitude
         currentLongitude = lastLocation.coordinate.longitude
         
@@ -170,12 +170,13 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     @IBAction func updateDistance(_ sender: Any) {
         distance = Double(distanceField.text!)!
-            distanceLabel.text = "Your distance is \(distance)"
+            distanceLabel.text = "Your distance is \(distance!)"
+        print(resultsArDistanceBearing(ar: matchedItems))
     }
     
     // math functions -----
     
-    func somequadrant(bearing: Double) -> String {
+    func someQuadrant(bearing: Double) -> String {
         let quadrant = bearing / 45
         let  which_quadrant = quadrant.rounded(.up)
         let  string_quadrant = String(which_quadrant)
@@ -190,7 +191,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func degreesToRadians(degrees: Double) -> Double { return degrees * .pi / 180.0 }
     func radiansToDegrees(radians: Double) -> Double { return radians * 180.0 / .pi }
     
-    func getBearingBetweenTwoPoints1(point1 : CLLocation, point2 : CLLocation) -> Double {
+    func getBearingBetweenTwoPoints(point1 : CLLocation, point2 : CLLocation) -> Double {
         
         let lat1 = degreesToRadians(degrees: point1.coordinate.latitude)
         let lon1 = degreesToRadians(degrees: point1.coordinate.longitude)
@@ -207,31 +208,40 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         return radiansToDegrees(radians: radiansBearing)
     }
     
-    func haversineDistance(la2: Double, lo2: Double) -> Double {
+    func haversineDistance(lat2:Double, lon2:Double) -> Double {
         
-        let radius = 6367444.7
-        
-        let haversin = { (angle: Double) -> Double in
-            return (1 - cos(angle))/2
-        }
-        
-        let ahaversin = { (angle: Double) -> Double in
-            return 2*asin(sqrt(angle))
-        }
-        
-        // Converts from degrees to radians
-        let dToR = { (angle: Double) -> Double in
-            return (angle / 360.0) * 2.0 * .pi
-        }
-        
-        let lat1 = dToR(currentLatitude)
-        let lon1 = dToR(currentLongitude)
-        let lat2 = dToR(la2)
-        let lon2 = dToR(lo2)
-        
-        return radius * ahaversin(haversin(lat2 - lat1) + cos(lat1) * cos(lat2) * haversin(lon2 - lon1))
+        var dist = sin(degreesToRadians(degrees: currentLatitude)) * sin(degreesToRadians(degrees: lat2)) + cos(degreesToRadians(degrees: currentLatitude)) * cos(degreesToRadians(degrees: lat2)) * cos(degreesToRadians(degrees: currentLongitude - lon2))
+            
+        dist = acos(dist)
+        dist = radiansToDegrees(radians: dist)
+        dist = dist * 60 * 1.1515
+        dist = dist * 1.609344
+        print(currentLatitude, currentLongitude, dist)
+        print(dist)
+        return dist
     }
+
     
+    func resultsArDistanceBearing (ar: [[String:Any]]) -> [[String:Any]] {
+        var matchedStats: [[String:Any]] = []
+        for POI in ar {
+            
+            let POIBearing = getBearingBetweenTwoPoints(point1: currentLocation, point2: POI["location"] as! CLLocation)
+            let POIQuadrant = someQuadrant(bearing: POIBearing)
+            
+            let POIStats = ["name": POI["name"],
+                               "latitude": POI["latitude"],
+                               "longitude": POI["longitude"],
+                               "location": POI["location"],
+                               "distance": haversineDistance(lat2: POI["latitude"] as! Double, lon2: POI["longitude"] as! Double),
+                               "quadrant": POIQuadrant]
+            
+            matchedStats.append(POIStats)
+        }
+        print(matchedStats)
+        return matchedStats
+        
+    }
     
     // is the POI in the correct sector and in the specified distance?
     
@@ -240,8 +250,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     // user_distance is the user's input
     // quadrant_of_poi is found by founding the angle between the two points and classifying what quadrant it's in
     
-    func isValidPOI(user_distance: Double, user_quadrant: String, quadrant_of_poi: String, distance_of_poi: Double) -> Bool {
-        if distance_of_poi <= user_distance && quadrant_of_poi == user_quadrant {
+    func isValidPOI(POIQuadrant: String, distance_of_poi: Double) -> Bool {
+        let userQuadrant = someQuadrant(bearing: currentHeading)
+        if distance_of_poi <= distance && userQuadrant == POIQuadrant {
             return true
         } else {
             return false
