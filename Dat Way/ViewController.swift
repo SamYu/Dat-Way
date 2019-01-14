@@ -12,16 +12,18 @@ import MapKit
 import Foundation
 import Darwin
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITableViewDataSource {
+    
     
 
     @IBOutlet weak var myMapView: MKMapView!
     @IBOutlet weak var searchText: UITextField!
     @IBOutlet weak var distanceField: UITextField!
-    @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var headingLabel: UILabel!
     @IBOutlet weak var latitudeLabel: UILabel!
     @IBOutlet weak var longitudeLabel: UILabel!
+    @IBOutlet weak var resultsTable: UITableView!
+    @IBOutlet weak var resultsCountField: UILabel!
     
     @IBAction func textFieldReturn(_ sender: UITextField) {
         _ = sender.resignFirstResponder()
@@ -31,6 +33,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     var matchingItems: [MKMapItem] = [MKMapItem()]
     var matchedItems: [[String:Any]] = []
+    var searchResults: [MKMapItem] = []
     
     var lm:CLLocationManager!
     var currentLatitude: Double!
@@ -112,7 +115,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 } else {
                     print("Matches found")
                     
-                    
+                    self.matchedItems = []
                     
                     for item in results.mapItems {
                         
@@ -121,7 +124,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                              "latitude": item.placemark.location!.coordinate.latitude,
                              "longitude": item.placemark.location!.coordinate.longitude,
                              "location":
-                                item.placemark.location!]
+                                item.placemark.location!,
+                             "MKMapItem": item]
                     
                         
                         
@@ -169,14 +173,23 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     
     @IBAction func updateDistance(_ sender: Any) {
-        distance = Double(distanceField.text!)!
-            distanceLabel.text = "Your distance is \(distance!)"
+        distance = Double(distanceField.text!) ?? 10.0
         let matchedStats = resultsArDistanceBearing(ar: matchedItems)
+        
+        if matchedStats.isEmpty {
+            print("There are no results")
+        } else {
         //print(matchedItems)
         //print(matchedStats)
         //print(currentHeading)
         //print(isValidPOIAr(ar: matchedStats))
-        latLong(location: matchedStats[0]["location"] as! CLLocation, name: matchedStats[0]["name"] as! String)
+            print(searchResults)
+            searchResults = (isValidPOIAr(ar: matchedStats)).map { $0["MKMapItem"]!} as! [MKMapItem]
+            resultsCountField.text = "Total Results: \(searchResults.count)"
+            
+            resultsTable.reloadData()
+       // latLong(location: matchedStats[0]["location"] as! CLLocation, name: matchedStats[0]["name"] as! String)
+    }
     }
     
     // math functions -----
@@ -251,7 +264,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                                "longitude": POI["longitude"]!,
                                "location": POI["location"]!,
                                "distance": haversineDistance(lat2: POI["latitude"] as! Double, lon2: POI["longitude"] as! Double),
-                               "quadrant": POIQuadrant]
+                               "quadrant": POIQuadrant,
+                               "MKMapItem": POI["MKMapItem"]!]
             
             matchedStats.append(POIStats as [String : Any])
         }
@@ -334,6 +348,17 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         })
     }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return searchResults.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let searchResult = searchResults[indexPath.row]
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
+        cell.textLabel?.text = searchResult.name
+        cell.detailTextLabel?.text = (searchResult.placemark.addressDictionary![ "FormattedAddressLines"] as! [String]).joined(separator: ", ")
+        return cell
+    }
     
 }
 
