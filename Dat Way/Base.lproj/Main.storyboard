@@ -18,18 +18,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="What are you looking for?" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="HYh-aM-MrS">
-                                <rect key="frame" x="0.0" y="35" width="369" height="29"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="29" id="obg-aJ-P4D"/>
-                                </constraints>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" keyboardType="alphabet" returnKeyType="search"/>
-                                <connections>
-                                    <action selector="textFieldReturn:" destination="BYZ-38-t0r" eventType="editingDidEndOnExit" id="MG0-5N-T5T"/>
-                                </connections>
-                            </textField>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="qb3-gg-Jcu">
                                 <rect key="frame" x="0.0" y="85" width="375" height="94"/>
                                 <constraints>
@@ -84,21 +72,36 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="7tM-pv-EeX"/>
                                 </connections>
                             </tableView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Total Results:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HaV-qh-Cn7">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total Results:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HaV-qh-Cn7">
                                 <rect key="frame" x="30" y="334" width="315" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="What are you looking for?" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="HYh-aM-MrS">
+                                <rect key="frame" x="16" y="33" width="343" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="29" id="KcV-Fo-zB8"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="alphabet" returnKeyType="search"/>
+                                <connections>
+                                    <action selector="textFieldReturn:" destination="BYZ-38-t0r" eventType="editingDidEndOnExit" id="MG0-5N-T5T"/>
+                                </connections>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="b7c-PS-evg" firstAttribute="top" secondItem="VGi-YM-MQl" secondAttribute="bottom" constant="8" symbolic="YES" id="2hP-Cy-KQh"/>
                             <constraint firstItem="yOZ-j5-8rk" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="25" id="4Cc-LQ-jl1"/>
+                            <constraint firstItem="HYh-aM-MrS" firstAttribute="centerX" secondItem="qb3-gg-Jcu" secondAttribute="centerX" id="529-Ff-LJ8"/>
+                            <constraint firstItem="HYh-aM-MrS" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="9Ws-jF-FJK"/>
                             <constraint firstItem="VGi-YM-MQl" firstAttribute="leading" secondItem="b7c-PS-evg" secondAttribute="leading" id="9e5-IZ-o5C"/>
+                            <constraint firstItem="HaV-qh-Cn7" firstAttribute="top" secondItem="RjT-Z2-GlF" secondAttribute="bottom" constant="17" id="EgE-21-dx4"/>
                             <constraint firstItem="dma-z9-JRV" firstAttribute="leading" secondItem="qb3-gg-Jcu" secondAttribute="leading" id="F1g-tt-8mg"/>
                             <constraint firstItem="b7c-PS-evg" firstAttribute="centerX" secondItem="TrP-Gb-M1x" secondAttribute="centerX" id="FzS-vV-ng0"/>
-                            <constraint firstItem="HYh-aM-MrS" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="15" id="Iyo-ua-Q2h"/>
                             <constraint firstItem="RjT-Z2-GlF" firstAttribute="baseline" secondItem="TrP-Gb-M1x" secondAttribute="baseline" id="Mue-iK-dln"/>
                             <constraint firstAttribute="trailing" secondItem="qb3-gg-Jcu" secondAttribute="trailing" id="N27-Cb-UG1"/>
                             <constraint firstItem="dma-z9-JRV" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="Nwq-WJ-i26"/>
@@ -107,18 +110,21 @@
                             <constraint firstItem="yOZ-j5-8rk" firstAttribute="leading" secondItem="VGi-YM-MQl" secondAttribute="leading" id="QIq-W4-ZNa"/>
                             <constraint firstItem="qb3-gg-Jcu" firstAttribute="centerX" secondItem="VGi-YM-MQl" secondAttribute="centerX" id="SnH-4E-6OG"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="yOZ-j5-8rk" secondAttribute="trailing" constant="72" id="YmY-bt-y6P"/>
+                            <constraint firstItem="HaV-qh-Cn7" firstAttribute="centerX" secondItem="TrP-Gb-M1x" secondAttribute="centerX" id="ccb-cx-JIZ"/>
+                            <constraint firstItem="HYh-aM-MrS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="f2i-U5-U6G"/>
+                            <constraint firstItem="HaV-qh-Cn7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="fJi-ju-9FD"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="TrP-Gb-M1x" secondAttribute="trailing" constant="163" id="fO7-cz-Lv5"/>
-                            <constraint firstItem="HYh-aM-MrS" firstAttribute="leading" secondItem="qb3-gg-Jcu" secondAttribute="leading" id="gAa-Yw-j1s"/>
                             <constraint firstItem="yOZ-j5-8rk" firstAttribute="top" secondItem="qb3-gg-Jcu" secondAttribute="bottom" constant="11" id="hIf-d4-7Fx"/>
-                            <constraint firstItem="HYh-aM-MrS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="k14-QG-UBz"/>
+                            <constraint firstItem="qb3-gg-Jcu" firstAttribute="top" secondItem="HYh-aM-MrS" secondAttribute="bottom" constant="23" id="jgf-hC-ZyT"/>
                             <constraint firstItem="VGi-YM-MQl" firstAttribute="trailing" secondItem="b7c-PS-evg" secondAttribute="trailing" id="lWN-1g-0ca"/>
                             <constraint firstItem="dma-z9-JRV" firstAttribute="trailing" secondItem="qb3-gg-Jcu" secondAttribute="trailing" id="mFQ-ED-OxY"/>
-                            <constraint firstItem="dma-z9-JRV" firstAttribute="top" secondItem="HaV-qh-Cn7" secondAttribute="bottom" constant="30" id="uGk-l7-AY4"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="HYh-aM-MrS" secondAttribute="trailing" constant="6" id="uWp-HK-mUD"/>
+                            <constraint firstItem="HYh-aM-MrS" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="13" id="oga-bm-nFM"/>
                             <constraint firstItem="VGi-YM-MQl" firstAttribute="top" secondItem="yOZ-j5-8rk" secondAttribute="bottom" constant="8" symbolic="YES" id="vrO-Ja-BLQ"/>
-                            <constraint firstItem="qb3-gg-Jcu" firstAttribute="top" secondItem="HYh-aM-MrS" secondAttribute="bottom" constant="21" id="xqH-h9-RKQ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="hLL-IR-a26" appends="YES" id="cYu-7L-DS7"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="distanceField" destination="RjT-Z2-GlF" id="HN3-tn-nlL"/>
@@ -132,6 +138,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="hLL-IR-a26"/>
             </objects>
             <point key="canvasLocation" x="136.80000000000001" y="132.68365817091455"/>
         </scene>

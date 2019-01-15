@@ -45,6 +45,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupKeyboardDismissRecognizer()
+        
         lm = CLLocationManager()
         lm.requestWhenInUseAuthorization()
         lm.headingOrientation = .portrait
@@ -153,7 +155,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         return true
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading!) {
         currentHeading = newHeading.magneticHeading
         headingLabel.text = "Magnetic heading is: \(currentHeading)"
     }
@@ -358,6 +360,18 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         cell.textLabel?.text = searchResult.name
         cell.detailTextLabel?.text = (searchResult.placemark.addressDictionary![ "FormattedAddressLines"] as! [String]).joined(separator: ", ")
         return cell
+    }
+    
+    func setupKeyboardDismissRecognizer(){
+        let tapRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(
+            target: self,
+            action: #selector(ViewController.dismissKeyboard))
+        
+        self.view.addGestureRecognizer(tapRecognizer)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
     
 }
